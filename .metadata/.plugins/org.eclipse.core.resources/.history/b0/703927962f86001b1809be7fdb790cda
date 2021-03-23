@@ -1,0 +1,20 @@
+<%@page import="Project.ConnectionProvider" %>
+<%@page import="java.sql.*" %>
+<%
+String branch = request.getParameter("branch");
+String rollNo = request.getParameter("rollNo");
+try{
+	Connection con = Project.ConnectionProvider.getCon();
+	Statement st = con.createStatement();
+	int i = st.executeUpdate("delete (select * from student inner join result on student.rollNo = result.rollNo where student.rollNo = '"+rollNo+"' and student.branch = '"+branch+"')");
+	int j = st.executeUpdate("delete from result where rollNo= '"+rollNo+"'");
+	if(i >0 && j>0)
+		response.sendRedirect("deleteSuccess.html");
+	else
+		response.sendRedirect("deleteFailure.html");
+}
+catch(Exception e){
+	response.sendRedirect("deleteFailure.html");
+	
+}
+%>
